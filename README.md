@@ -25,7 +25,7 @@ Add the following repository to your pom.xml
     </repository>
 ```
 
-And add the following dependency to start using GraceKelly in your maven project.
+And add the following dependency to start using Lego in your maven project.
 
 ```xml
     <dependency>

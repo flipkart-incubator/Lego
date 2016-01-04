@@ -7,27 +7,49 @@ Lego is a library to build any entity (web/api response) in a scatter-gather fas
 
 | Release | Date | Description |
 |:------------|:----------------|:------------|
-| Version 1.1.1             | Mar 17 2015      |    First release
+| Version 1.0.0             | Jan 04 2016      |    First public release
 
 ## Changelog
 
-Changelog can be viewed in [CHANGELOG.md](https://github.com/Flipkart/Lego/blob/master/CHANGELOG.md)
+Changelog can be viewed in [CHANGELOG.md](https://github.com/flipkart-incubator/Lego/blob/master/CHANGELOG.md)
+
+##Maven Artifact
+
+Add the following repository to your pom.xml
+
+```xml
+    <repository>
+      <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+    </repository>
+```
+
+And add the following dependency to start using GraceKelly in your maven project.
+
+```xml
+    <dependency>
+      <groupId>com.flipkart.lego</groupId>
+      <artifactId>lego</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+```
 
 ## Users
 
-[Poseidon](https://github.com/Flipkart/Poseidon)
+[Poseidon](https://github.com/flipkart-incubator/Poseidon)
 
 ## Getting help
-For discussion, help regarding usage, or receiving important announcements, subscribe to the [Lego users mailing list](https://groups.google.com/a/flipkart.com/forum/#!forum/lego-users)
+For discussion, help regarding usage raise issues 
 
 ## Contribution, Bugs and Feedback
 
-For bugs, questions and discussions please use the [Github Issues](https://github.com/Flipkart/Lego/issues).
-Please follow the [contribution guidelines](https://github.com/Flipkart/Lego/blob/master/CONTRIBUTING.md) when submitting pull requests.
+For bugs, questions and discussions please use the [Github Issues](https://github.com/flipkart-incubator/Lego/issues).
+Please follow the [contribution guidelines](https://github.com/flipkart-incubator/Lego/blob/master/CONTRIBUTING.md) when submitting pull requests.
 
 ## License
 
-Copyright 2015 Flipkart Internet, pvt ltd.
+Copyright 2016 Flipkart Internet, pvt ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

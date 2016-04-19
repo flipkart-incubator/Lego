@@ -57,21 +57,6 @@ public class LegoTest {
         public String getDescription() {
             return null;
         }
-
-        @Override
-        public String getId() throws UnsupportedOperationException {
-            return null;
-        }
-
-        @Override
-        public String getName() throws UnsupportedOperationException {
-            return null;
-        }
-
-        @Override
-        public List<Integer> getVersion() {
-            return null;
-        }
     }
 
     DataType dataType = new DummyDT();

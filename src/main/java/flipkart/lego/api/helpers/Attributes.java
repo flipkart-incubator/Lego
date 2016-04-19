@@ -46,7 +46,7 @@ public interface Attributes {
      * @param key
      * @return Object
      */
-    Object getAttribute(String key);
+    <T> T getAttribute(String key);
 
     /**
      * Gets all attibute keys and values as a Map.

@@ -5,9 +5,11 @@ Lego is a library to build any entity (web/api response) in a scatter-gather fas
 
 ## Releases
 
-| Release | Date | Description |
-|:------------|:----------------|:------------|
-| Version 1.0.0             | Jan 04 2016      |    First public release
+| Release       | Date            | Description                             |
+|:--------------|:----------------|:----------------------------------------|
+| Version 2.0.0 | Apr 19 2016     | - DataType is no longer Identifiable
+|               |                 | - Attributes.getAttribute() returns a generic type instead of Object
+| Version 1.0.0 | Jan 04 2016     | - First public release                  |
 
 ## Changelog
 
@@ -31,7 +33,7 @@ And add the following dependency to start using Lego in your maven project.
     <dependency>
       <groupId>com.flipkart.lego</groupId>
       <artifactId>lego</artifactId>
-      <version>1.0.0</version>
+      <version>2.0.0</version>
     </dependency>
 ```
 

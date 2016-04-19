@@ -24,5 +24,5 @@ import java.io.Serializable;
 /**
  * A {@link flipkart.lego.api.entities.DataType} is a data entity that is returned by a {@link flipkart.lego.api.entities.DataSource}
  */
-public interface DataType extends Identifiable, Describable, Serializable{
+public interface DataType extends Describable, Serializable{
 }

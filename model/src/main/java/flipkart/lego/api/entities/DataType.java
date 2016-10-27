@@ -16,13 +16,10 @@
 
 package flipkart.lego.api.entities;
 
-import flipkart.lego.api.helpers.Describable;
-import flipkart.lego.api.helpers.Identifiable;
-
 import java.io.Serializable;
 
 /**
  * A {@link flipkart.lego.api.entities.DataType} is a data entity that is returned by a {@link flipkart.lego.api.entities.DataSource}
  */
-public interface DataType extends Describable, Serializable{
+public interface DataType extends Serializable {
 }

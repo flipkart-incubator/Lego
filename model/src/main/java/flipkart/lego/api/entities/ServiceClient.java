@@ -17,14 +17,11 @@
 package flipkart.lego.api.entities;
 
 import flipkart.lego.api.exceptions.LegoServiceException;
-import flipkart.lego.api.helpers.Describable;
-import flipkart.lego.api.helpers.Identifiable;
 
 /**
- * A ServiceClient extends {@link Identifiable} interface
- * and is used as a base for implementing lego Service Clients
+ * A ServiceClient is used as a base for implementing lego Service Clients
  */
-public interface ServiceClient extends Identifiable, Describable {
+public interface ServiceClient {
 
     /**
      * Initializes the service client and any resources required.

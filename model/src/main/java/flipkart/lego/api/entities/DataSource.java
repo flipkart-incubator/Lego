@@ -17,17 +17,14 @@
 package flipkart.lego.api.entities;
 
 
-import flipkart.lego.api.helpers.Describable;
-import flipkart.lego.api.helpers.Identifiable;
-
 import java.util.concurrent.Callable;
 
 /**
- * A DataSource extends Callable and {@link Identifiable} interfaces.
- * A datasource is a callable with an Id, Name and Version. Datasources are dispatched by the Lego engine
+ * A DataSource extends Callable interface.
+ * A datasource is a callable. Datasources are dispatched by the Lego engine
  * over an executor service to fetch relevant data that will be used to build a model which is used to
  * build a {@link Buildable}
  */
-public interface DataSource extends Callable<DataType>, Identifiable, Describable {
+public interface DataSource extends Callable<DataType> {
 
 }

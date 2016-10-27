@@ -19,14 +19,12 @@ package flipkart.lego.api.entities;
 import flipkart.lego.api.exceptions.BadRequestException;
 import flipkart.lego.api.exceptions.InternalErrorException;
 import flipkart.lego.api.exceptions.ProcessingException;
-import flipkart.lego.api.helpers.Describable;
-import flipkart.lego.api.helpers.Identifiable;
 
 /**
  * A simple {@link Filter} interface that
  * filters based on {@link Request}s and {@link Response}s
  */
-public interface Filter extends Identifiable, Describable {
+public interface Filter {
 
     /**
      * Triggers processing of the request by this filter entity

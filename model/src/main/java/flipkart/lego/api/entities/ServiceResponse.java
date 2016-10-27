@@ -16,11 +16,8 @@
 
 package flipkart.lego.api.entities;
 
-import flipkart.lego.api.helpers.Describable;
-import flipkart.lego.api.helpers.Identifiable;
-
 /**
  * Any entity returned by a service client
  */
-public interface ServiceResponse extends Identifiable, Describable{
+public interface ServiceResponse {
 }

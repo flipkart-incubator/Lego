@@ -18,7 +18,6 @@ package flipkart.lego.api.entities;
 
 import flipkart.lego.api.exceptions.InternalErrorException;
 import flipkart.lego.api.exceptions.LegoException;
-import flipkart.lego.api.helpers.Identifiable;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -31,7 +30,7 @@ import java.util.Map;
  * is fetched from the data sources.
  * Buildables can be anything from webpages, webmodules to apiresponses.
  */
-public interface Buildable extends Identifiable{
+public interface Buildable {
 
     /**
      * This method returns a long value that will be considered as the timeout value by lego when

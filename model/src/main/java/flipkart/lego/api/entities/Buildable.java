@@ -30,7 +30,7 @@ import java.util.Map;
  * is fetched from the data sources.
  * Buildables can be anything from webpages, webmodules to apiresponses.
  */
-public interface Buildable {
+public interface Buildable extends Block {
 
     /**
      * This method returns a long value that will be considered as the timeout value by lego when

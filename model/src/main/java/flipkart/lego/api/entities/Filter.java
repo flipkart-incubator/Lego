@@ -24,7 +24,7 @@ import flipkart.lego.api.exceptions.ProcessingException;
  * A simple {@link Filter} interface that
  * filters based on {@link Request}s and {@link Response}s
  */
-public interface Filter {
+public interface Filter extends Block {
 
     /**
      * Triggers processing of the request by this filter entity

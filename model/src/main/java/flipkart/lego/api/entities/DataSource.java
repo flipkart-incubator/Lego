@@ -25,6 +25,6 @@ import java.util.concurrent.Callable;
  * over an executor service to fetch relevant data that will be used to build a model which is used to
  * build a {@link Buildable}
  */
-public interface DataSource extends Callable<DataType> {
+public interface DataSource extends Callable<DataType>, Block {
 
 }

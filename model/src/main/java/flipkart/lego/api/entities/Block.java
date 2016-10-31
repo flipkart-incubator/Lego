@@ -16,25 +16,8 @@
 
 package flipkart.lego.api.entities;
 
-import flipkart.lego.api.exceptions.LegoServiceException;
-
 /**
- * A ServiceClient is used as a base for implementing lego Service Clients
+ * Created by shrey.garg on 01/11/16.
  */
-public interface ServiceClient extends Block {
-
-    /**
-     * Initializes the service client and any resources required.
-     *
-     * @throws LegoServiceException
-     */
-    void init() throws LegoServiceException;
-
-    /**
-     * ShutsDown service clients and frees any resources used by the service
-     * client
-     *
-     * @throws LegoServiceException
-     */
-    void shutDown() throws LegoServiceException;
+public interface Block {
 }

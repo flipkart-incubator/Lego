@@ -19,5 +19,5 @@ package flipkart.lego.api.entities;
 /**
  * Any entity returned by a service client
  */
-public interface ServiceResponse {
+public interface ServiceResponse extends Block {
 }

@@ -1,3 +1,6 @@
+## 3.0.0 (Nov 24, 2016)
+- Removed Identifiable, Describable and Versioned. Introduced Block.
+
 ## 3.0.0-SNAPSHOT (Oct 14, 2016)
 - Modules named model and core to separate entities (ex: DataType) from functionality (ex: Lego engine)
 

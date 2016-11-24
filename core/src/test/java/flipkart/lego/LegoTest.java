@@ -44,33 +44,16 @@ public class LegoTest {
     ExecutorService executorService = Executors.newCachedThreadPool();
 
     class DummyDT implements DataType {
-        @Override
-        public String getShortDescription() {
-            return null;
-        }
 
         public String getResponse() {
             return "Some ds response";
         }
 
-        @Override
-        public String getDescription() {
-            return null;
-        }
     }
 
     DataType dataType = new DummyDT();
 
     Filter sleepingFilter = new Filter() {
-        @Override
-        public String getShortDescription() {
-            return null;
-        }
-
-        @Override
-        public String getDescription() {
-            return null;
-        }
 
         @Override
         public void filterRequest(Request request, Response response1) throws InternalErrorException, BadRequestException {
@@ -88,21 +71,6 @@ public class LegoTest {
             } catch (InterruptedException e) {
                 throw new InternalErrorException(e);
             }
-        }
-
-        @Override
-        public String getId() throws UnsupportedOperationException {
-            return null;
-        }
-
-        @Override
-        public String getName() throws UnsupportedOperationException {
-            return null;
-        }
-
-        @Override
-        public List<Integer> getVersion() throws UnsupportedOperationException {
-            return null;
         }
     };
 
@@ -242,31 +210,6 @@ public class LegoTest {
                 } catch (Exception e) {
                 }
                 return dataType;
-            }
-
-            @Override
-            public String getId() throws UnsupportedOperationException {
-                return null;
-            }
-
-            @Override
-            public String getName() throws UnsupportedOperationException {
-                return null;
-            }
-
-            @Override
-            public List<Integer> getVersion() throws UnsupportedOperationException {
-                return null;
-            }
-
-            @Override
-            public String getShortDescription() {
-                return null;
-            }
-
-            @Override
-            public String getDescription() {
-                return null;
             }
         }
         boolean internalErrorExceptionThrown = false;

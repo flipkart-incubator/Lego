@@ -14,24 +14,10 @@
  * limitations under the License.
  */
 
-package flipkart.lego.api.helpers;
+package flipkart.lego.api.entities;
 
 /**
- * This interface provide methods to access description of any entities
+ * Created by shrey.garg on 01/11/16.
  */
-public interface Describable {
-
-    /**
-     * Returns a short description
-     * @return short description
-     */
-    String getShortDescription();
-
-    /**
-     * Return the description of an entity
-     * @return description
-     */
-    String getDescription();
-
-
+public interface Block {
 }

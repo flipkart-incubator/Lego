@@ -1,3 +1,6 @@
+## 3.1.0 (Dec 7, 2016)
+- DataSource returns a generic type extending from DataType
+
 ## 3.0.0 (Nov 24, 2016)
 - Removed Identifiable, Describable and Versioned. Introduced Block.
 

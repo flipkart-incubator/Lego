@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 import static org.testng.Assert.assertTrue;
 
 public class LegoTest {
-
+/*
     Request request;
     Response response;
     Buildable buildable;
@@ -260,6 +260,6 @@ public class LegoTest {
         assertTrue(internalErrorExceptionThrown);
         Mockito.verify(buildable1, Mockito.never()).getRequiredDataSources(request);
     }
-
+*/
 
 }

@@ -4,7 +4,7 @@
 
     <groupId>com.flipkart.lego</groupId>
     <artifactId>lego</artifactId>
-    <version>3.1.0</version>
+    <version>3.2.0.FIBER-SNAPSHOT</version>
 
     <name>Lego</name>
     <description>Lego Engine and other core Lego Pieces.</description>

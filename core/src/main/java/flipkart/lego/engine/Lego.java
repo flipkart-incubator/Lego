@@ -17,9 +17,10 @@
 package flipkart.lego.engine;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.util.concurrent.*;
 import flipkart.lego.api.entities.*;
 import flipkart.lego.api.exceptions.*;
+import flipkart.lego.concurrency.api.CompositeFuture;
+import flipkart.lego.concurrency.api.NonBlockingDataSource;
 import flipkart.lego.engine.filters.FilterChain;
 import flipkart.lego.engine.filters.FilterExecutionPhase;
 import org.slf4j.Logger;
@@ -34,14 +35,14 @@ import java.util.concurrent.*;
 public class Lego {
 
     private final LegoSet legoSet;
-    private final ListeningExecutorService dataSourceTPE;
+    private final ExecutorService dataSourceTPE;
     private final ExecutorService filterTPE;
 
     private final Logger exceptionLogger = LoggerFactory.getLogger("ExceptionLogger");
 
     public Lego(final LegoSet legoSet, final ExecutorService dataSourceExecutorService, final ExecutorService filterExecutorService) {
         this.legoSet = legoSet;
-        this.dataSourceTPE = getListeningExecutorService(dataSourceExecutorService);
+        this.dataSourceTPE = dataSourceExecutorService;
         this.filterTPE = filterExecutorService;
     }
 
@@ -51,8 +52,8 @@ public class Lego {
         Map<String, DataSource> optionalDataSources = null;
 
         //this is the model that will passed on to the buildable element during build time
-        Map<String, ListenableFuture> requiredFutureHashMap = new HashMap<>();
-        Map<String, ListenableFuture> optionalFutureHashMap = new HashMap<>();
+        Map<String, Future<Object>> requiredFutureHashMap = new HashMap<>();
+        Map<String, Future<Object>> optionalFutureHashMap = new HashMap<>();
         Map<String, Object> modelHashMap = new HashMap<>();
         long elementTimeout = 0;
 
@@ -120,8 +121,8 @@ public class Lego {
         }
 
         //fill model with required & optional data
-        fillModel(modelHashMap, requiredFutureHashMap);
-        fillModel(modelHashMap, optionalFutureHashMap);
+        fillModel(modelHashMap, requiredFutureHashMap, requiredDataSources);
+        fillModel(modelHashMap, optionalFutureHashMap, optionalDataSources);
 
         renderElement(buildable, request, response, modelHashMap);
 
@@ -164,11 +165,19 @@ public class Lego {
         }
     }
 
-    private void fillModel(Map<String, Object> model, Map<String, ListenableFuture> futureMap) {
-        for (Map.Entry<String, ListenableFuture> listenableFutureEntry : futureMap.entrySet()) {
-            if (listenableFutureEntry.getValue().isDone() && !listenableFutureEntry.getValue().isCancelled()) {
+    private void fillModel(Map<String, Object> model, Map<String, Future<Object>> futureMap, Map<String, DataSource> dataSources) {
+        for (Map.Entry<String, Future<Object>> futureEntry : futureMap.entrySet()) {
+            String key = futureEntry.getKey();
+            Future<Object> future = futureEntry.getValue();
+            if (future.isDone() && !future.isCancelled()) {
                 try {
-                    model.put(listenableFutureEntry.getKey(), listenableFutureEntry.getValue().get());
+                    DataSource dataSource = dataSources.get(key);
+                    if (dataSource instanceof NonBlockingDataSource) {
+                        NonBlockingDataSource nonBlockingDataSource = (NonBlockingDataSource) dataSource;
+                        model.put(key, nonBlockingDataSource.get());
+                    } else {
+                        model.put(key, future.get());
+                    }
                 } catch (Exception e) {
                     exceptionLogger.error("Exception in FillModel: {}", e);
                 }
@@ -185,20 +194,20 @@ public class Lego {
         }
     }
 
-    private long waitUntilAvailableOrTimeout(Map<String, ListenableFuture> requiredFutureHashMap, Map<String, ListenableFuture> optionalFutureHashMap, Request request, long elementTimeout) throws TimeoutException {
-        //requiredFuture is only realized if all the futures are realized
-        List<ListenableFuture<Object>> requireFutureList = new ArrayList<>();
-        for (Map.Entry<String, ListenableFuture> listenableFutureEntry : requiredFutureHashMap.entrySet()) {
-            requireFutureList.add(listenableFutureEntry.getValue());
+    private long waitUntilAvailableOrTimeout(Map<String, Future<Object>> requiredFutureHashMap, Map<String, Future<Object>> optionalFutureHashMap, Request request, long elementTimeout) throws TimeoutException {
+        //requiredFuture is only realized if all the futures are succeeded
+        List<Future<Object>> requireFutureList = new ArrayList<>();
+        for (Map.Entry<String, Future<Object>> futureEntry : requiredFutureHashMap.entrySet()) {
+            requireFutureList.add(futureEntry.getValue());
         }
-        ListenableFuture<List<Object>> requiredFuture = Futures.allAsList(requireFutureList);
+        CompositeFuture requiredFuture = new CompositeFuture<>(requireFutureList, true);
 
-        //requiredFuture is only realized if all the futures are realized
-        List<ListenableFuture<Object>> optionalFutureList = new ArrayList<>();
-        for (Map.Entry<String, ListenableFuture> listenableFutureEntry : optionalFutureHashMap.entrySet()) {
-            optionalFutureList.add(listenableFutureEntry.getValue());
+        //optionalFuture is realized even if all the futures aren't succeeded
+        List<Future<Object>> optionalFutureList = new ArrayList<>();
+        for (Map.Entry<String, Future<Object>> futureEntry : optionalFutureHashMap.entrySet()) {
+            optionalFutureList.add(futureEntry.getValue());
         }
-        ListenableFuture<List<Object>> optionalFuture = Futures.successfulAsList(optionalFutureList);
+        CompositeFuture optionalFuture = new CompositeFuture<>(requireFutureList, false);
 
         //used to calculate remaining time for timeout
         Stopwatch requiredDSStopWatch = Stopwatch.createStarted();
@@ -209,17 +218,17 @@ public class Lego {
         } catch (TimeoutException timeoutException) {
             exceptionLogger.error("TimeOutException: required data sources timed out {}, Timeout:{}, Exception:{}", request, elementTimeout, timeoutException);
             requiredFuture.cancel(true);
-            cancelFutures((Collection) requireFutureList);
+            cancelFutures(requireFutureList);
             throw timeoutException;
         } catch (InterruptedException interruptedException) {
             exceptionLogger.error("InterruptedException: required data sources were interrupted{}, Message:{}, Exception:{}", request, interruptedException.getMessage(), interruptedException);
             requiredFuture.cancel(true);
-            cancelFutures((Collection) requireFutureList);
+            cancelFutures(requireFutureList);
             throwTimeoutException(interruptedException);
         } catch (ExecutionException executionException) {
             exceptionLogger.error("ExcecutionException: {}", executionException);
             requiredFuture.cancel(true);
-            cancelFutures((Collection) requireFutureList);
+            cancelFutures(requireFutureList);
             throwTimeoutException(executionException);
         }
 
@@ -232,7 +241,7 @@ public class Lego {
                 optionalFuture.get(1, TimeUnit.MILLISECONDS);
             } catch (Exception exception) {
                 optionalFuture.cancel(true);
-                cancelFutures((Collection) optionalFutureList);
+                cancelFutures(optionalFutureList);
                 exceptionLogger.warn("Optional Data Sources Were Not Realized {}, Exception: {}", request, exception);
             }
         }
@@ -248,16 +257,27 @@ public class Lego {
         throw timeoutException;
     }
 
-    private void dispatchDataSourceTasks(Map<String, DataSource> dataSources, Map<String, ListenableFuture> futureHashMap) {
+    private void dispatchDataSourceTasks(Map<String, DataSource> dataSources, Map<String, Future<Object>> futureHashMap) throws ProcessingException {
         for (Map.Entry<String, DataSource> dataSourceEntry : dataSources.entrySet()) {
-            ListenableFuture result = dataSourceTPE.submit(dataSourceEntry.getValue());
+            DataSource dataSource = dataSourceEntry.getValue();
+            Future<Object> result;
+            if (dataSource instanceof NonBlockingDataSource) {
+                try {
+                    NonBlockingDataSource nbDataSource = (NonBlockingDataSource) dataSource;
+                    result = nbDataSource.call();
+                } catch (Exception e) {
+                    throw new ProcessingException(e);
+                }
+            } else {
+                result = dataSourceTPE.submit(dataSource);
+            }
             futureHashMap.put(dataSourceEntry.getKey(), result);
         }
 
     }
 
-    private void cancelFutures(Collection<ListenableFuture> futures) {
-        for (ListenableFuture future : futures) {
+    private void cancelFutures(Collection<Future<Object>> futures) {
+        for (Future<Object> future : futures) {
             try {
                 if (!future.isCancelled() && !future.isDone()) {
                     future.cancel(true);
@@ -265,9 +285,4 @@ public class Lego {
             } catch (Exception ignored) {}
         }
     }
-
-    private ListeningExecutorService getListeningExecutorService(ExecutorService executorService) {
-        return MoreExecutors.listeningDecorator(executorService);
-    }
-
 }
